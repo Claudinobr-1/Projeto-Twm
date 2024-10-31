@@ -1,0 +1,37 @@
+.biblioteca-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.titulo {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+.secao {
+    margin-top: 30px;
+}
+
+.livros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.livro-card {
+    width: 100%;
+    max-width: 300px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+.livro-card .card-title {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.livro-card .card-text {
+    color: #495057;
+}

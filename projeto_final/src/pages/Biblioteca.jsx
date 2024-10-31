@@ -1,4 +1,6 @@
 import Container from 'react-bootstrap/Container';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 import React, { useEffect, useState } from 'react';
 import './Modelo.css';
 
@@ -7,38 +9,33 @@ const Ordem = () => {
     const [Lidoss, setLidoss] = useState([]);
     const [Desejadoss, setDesejadoss] = useState([]);
 
+    const fetchDados = () => {
+        fetch("http://localhost:5000/alldesejadoss", {
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: "GET",
+        })
+        .then((response) => response.json())
+        .then((data) => setDesejadoss(data))
+        .catch((error) => console.log(error));
+
+        fetch("http://localhost:5000/all_lidos", {
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            method: "GET",
+        })
+        .then((response) => response.json())
+        .then((data) => setLidoss(data))
+        .catch((error) => console.log(error));
+    };
+
     useEffect(() => {
         if (carregaBiblioteca) {
-            console.log('Carrega Desejados');
-            fetch("http://localhost:5000/alldesejadoss", {
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: "GET",
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Dados dos Livros Desejados:", data);
-                setDesejadoss(data); 
-            })
-            .catch((error) => console.log(error));
-
-            console.log('Carrega Lidos');
-            fetch("http://localhost:5000/all_lidos", {
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                method: "GET",
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log("Dados dos Livros Lidos:", data);
-                setLidoss(data); 
-            })
-            .catch((error) => console.log(error));
-
+            fetchDados();
             setCarregaBiblioteca(false);
         }
     }, [carregaBiblioteca]);
@@ -48,39 +45,51 @@ const Ordem = () => {
     };
 
     return (
-        <Container>
-            <div>
-                <br />
-                <h1 className='titulo'>Sua Biblioteca</h1>
-                <ul>
+        <Container className="biblioteca-container">
+            <h1 className="titulo">Sua Biblioteca</h1>
+            <Button variant="primary" onClick={handleCarregaBiblioteca}>Atualizar</Button>
+
+            <div className="secao">
+                <h2>Livros Desejados</h2>
+                <div className="livros">
                     {Desejadoss.map((desejados) => (
-                        <li key={desejados.id}>
-                            <strong>ID:</strong> {desejados.id} | 
-                            <strong> Título:</strong> {desejados.titulo} | 
-                            <strong> Gênero:</strong> {desejados.genero} |
-                            <strong> Autor:</strong> {desejados.autor} |
-                            <strong> Data Publicação:</strong> {desejados.dataPub} |
-                            <strong> Editora:</strong> {desejados.editora} |
-                            <strong> Status:</strong> {desejados.status} |
-                        </li>
+                        <Card key={desejados.id} className="livro-card">
+                            <Card.Body>
+                                <Card.Title>{desejados.titulo}</Card.Title>
+                                <Card.Text>
+                                    <strong>Gênero:</strong> {desejados.genero}<br/>
+                                    <strong>Autor:</strong> {desejados.autor}<br/>
+                                    <strong>Data Publicação:</strong> {desejados.dataPub}<br/>
+                                    <strong>Editora:</strong> {desejados.editora}<br/>
+                                    <strong>Status:</strong> {desejados.status}<br/>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
                     ))}
-                </ul>
-                <ul>
+                </div>
+            </div>
+
+            <div className="secao">
+                <h2>Livros Lidos</h2>
+                <div className="livros">
                     {Lidoss.map((lidos) => (
-                        <li key={lidos.id}>
-                            <strong>ID:</strong> {lidos.id} | 
-                            <strong> Título:</strong> {lidos.titulo} | 
-                            <strong> Gênero:</strong> {lidos.genero} |
-                            <strong> Autor:</strong> {lidos.autor} |
-                            <strong> Avaliação:</strong> {lidos.avaliacao} |
-                            <strong> Comentário:</strong> {lidos.comentario} |
-                        </li>
+                        <Card key={lidos.id} className="livro-card">
+                            <Card.Body>
+                                <Card.Title>{lidos.titulo}</Card.Title>
+                                <Card.Text>
+                                    <strong>Gênero:</strong> {lidos.genero}<br/>
+                                    <strong>Autor:</strong> {lidos.autor}<br/>
+                                    <strong>Avaliação:</strong> {lidos.avaliacao}<br/>
+                                    <strong>Comentário:</strong> {lidos.comentario}<br/>
+                                </Card.Text>
+                            </Card.Body>
+                        </Card>
                     ))}
-                </ul>
-                <button onClick={handleCarregaBiblioteca}>Atualizar</button>
+                </div>
             </div>
         </Container>
     );
 };
 
 export default Ordem;
+
